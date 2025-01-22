@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Estado Liberal (1833-1874)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-4">Estado Liberal (1833-1874)</h1>
+        <div id="quiz-container">
+            <!-- Aquí se mostrará la pregunta -->
+        </div>
+        <div id="feedback" class="text-center mt-4 text-lg font-medium"></div>
+        <div id="score" class="text-center mt-4">
+            <p>Aciertos: <span id="correct-count">0</span></p>
+            <p>Fallos: <span id="incorrect-count">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Depósito de preguntas y respuestas
+        const allQuestions = [
+            { question: "¿Qué alianza fue creada en el Congreso de Viena para garantizar la restauración de las monarquías absolutas?", options: ["La Alianza Atlántica", "La Santa Alianza", "La Liga de Naciones", "El Pacto de Familia"], answer: 1 },
+             { question: "¿Qué institución fue restablecida por Fernando VII para controlar la ortodoxia religiosa?", options: ["La Santa Alianza", "La Inquisición", "El Consejo de Indias", "El Tribunal Supremo"], answer: 1 },
+            { question: "¿Qué documento solicitaba el regreso al Antiguo Régimen y la eliminación de la libertad de prensa?", options: ["La Constitución de Cádiz", "El Manifiesto de los Persas", "El Tratado de Utrecht", "El Reglamento de Instrucción Pública"], answer: 1 },
+            { question: "¿Qué sector económico fue especialmente afectado por la crisis durante el sexenio absolutista?", options: ["La industria textil", "La agricultura", "El comercio marítimo", "La minería"], answer: 1 },
+            { question: "¿Qué herramienta utilizaban los liberales para difundir sus ideas en secreto?", options: ["Periódicos clandestinos", "Sociedades masónicas", "Carteles públicos", "Pamfletos oficiales"], answer: 1 },
+            { question: "¿Qué fue la Regencia de Urgel?", options: ["Un gobierno liberal provisional", "Un intento de gobierno absolutista legítimo", "Un tratado internacional", "Una reforma educativa"], answer: 1 },
+            { question: "¿Qué órgano aprobó el Reglamento General de Instrucción Pública?", options: ["Las Cortes de Cádiz", "El Consejo de Ministros", "La Santa Alianza", "La Milicia Nacional"], answer: 0 },
+          { question: "¿Qué grupo social lideró la lucha por la independencia en América?", options: ["Los peninsulares", "Los criollos", "Los mestizos", "Los indígenas"], answer: 1 },
+           { question: "¿Qué país fue el primero en proclamar su independencia en América del Sur?", options: ["Colombia", "Argentina", "Chile", "Perú"], answer: 1 },
+           { question: "¿Qué medida económica se implementó para fomentar el mercado interno durante el Trienio Liberal?", options: ["Prohibición de importar cereales", "Reducción de impuestos", "Establecimiento de monopolios", "Liberalización del comercio"], answer: 0 },
+           { question: "¿Qué nombre recibió el ejército enviado por la Santa Alianza para restaurar el absolutismo en España?", options: ["La Guardia Real", "Los Cien Mil Hijos de San Luis", "El Ejército Constitucional", "El Ejército de Ultramar"], answer: 1 },
+           { question: "¿Qué tipo de división territorial se implementó durante el Trienio Liberal?", options: ["División en regiones", "División en provincias", "División en cantones", "División en departamentos"], answer: 1 },
+           { question: "¿Qué líder independentista creó la República de la Gran Colombia?", options: ["José de San Martín", "Simón Bolívar", "Miguel Hidalgo", "Agustín de Iturbide"], answer: 1 },
+           { question: "¿Qué guerra marcó el fin del dominio español en América del Sur?", options: ["La guerra de Ayacucho", "La guerra de la Independencia", "La guerra de Chacabuco", "La guerra de Trafalgar"], answer: 0 },
+            { question: "¿Qué institución fue creada por Fernando VII para procesar a los liberales tras el Trienio Liberal?", options: ["Las Juntas de Fe", "Las Comisiones Militares", "El Tribunal de la Santa Alianza", "El Consejo de Indias"], answer: 1 },
+            { question: "¿Qué reforma administrativa fue introducida durante la Década Ominosa?", options: ["Creación del Consejo de Ministros", "Reinstauración de los gremios", "Abolición del mayorazgo", "Supresión del diezmo"], answer: 0 },
+           { question: "¿Qué sistema político buscaban restablecer los absolutistas en España?", options: ["La monarquía constitucional", "El absolutismo", "La república parlamentaria", "La democracia liberal"], answer: 1 },
+           { question: "¿Qué consecuencia económica tuvo la independencia de las colonias americanas para España?", options: ["Incremento de los ingresos fiscales", "Pérdida de su mercado más importante", "Expansión del comercio marítimo", "Aumento de la producción industrial"], answer: 1 },
+           { question: "¿Qué sector social se benefició principalmente tras la independencia en América?", options: ["Los indígenas", "Los criollos", "Los esclavos", "Los mestizos"], answer: 1 },
+           { question: "¿Qué aspecto cultural unificó a los países hispanoamericanos tras la independencia?", options: ["El mestizaje", "La lengua española", "La arquitectura europea", "La religión católica"], answer: 1 },
+           { question: "¿Qué nombre recibió Fernando VII debido a su popularidad?", options: ["El Justo", "El Deseado", "El Libertador", "El Absolutista"], answer: 1 },
+           { question: "¿Qué tratado buscó restablecer el orden tradicional en Europa tras Napoleón?", options: ["Tratado de Tordesillas", "Congreso de Viena", "Manifiesto de los Persas", "Tratado de Utrecht"], answer: 1 },
+           { question: "¿Qué institución fue restablecida por Fernando VII al regresar al poder?", options: ["La Santa Alianza", "La Inquisición", "El Parlamento", "El Ejército Constitucional"], answer: 1 },
+           { question: "¿Qué documento redactaron los diputados absolutistas en 1814?", options: ["Manifiesto de Cádiz", "Manifiesto de los Persas", "Manifiesto Liberal", "Constitución de Cádiz"], answer: 1 },
+           { question: "¿Qué sector social apoyaba mayoritariamente a Fernando VII?", options: ["La burguesía", "Los campesinos", "Los criollos", "Los comerciantes"], answer: 1 },
+           { question: "¿Qué evento marcó el inicio del Trienio Liberal?", options: ["El pronunciamiento de Riego", "El Manifiesto de los Persas", "El Congreso de Viena", "La Regencia de Urgel"], answer: 0 },
+        { question: "¿Qué medida económica fue implementada durante el Trienio Liberal?", options: ["Reintroducción del diezmo", "Prohibición de importar cereales", "Establecimiento de gremios", "Abolición de la desamortización"], answer: 1 },
+        { question: "¿Qué división territorial se estableció durante el Trienio Liberal?", options: ["47 provincias", "52 provincias", "32 provincias", "40 provincias"], answer: 1 },
+        { question: "¿Qué nombre recibieron los liberales que querían reforzar el poder de la Corona?", options: ["Exaltados", "Moderados", "Constitucionalistas", "Absolutistas"], answer: 1 },
+        { question: "¿Qué ejército restauró el absolutismo en 1823?", options: ["La Guardia Real", "El Ejército de los Andes", "Los Cien Mil Hijos de San Luis", "La Milicia Nacional"], answer: 2 },
+        { question: "¿Qué medida implementó Fernando VII tras recuperar el poder en 1823?", options: ["Abolición del mayorazgo", "Creación de la Milicia Nacional", "Restablecimiento del diezmo", "Implementación del sufragio universal"], answer: 2 },
+        { question: "¿Qué documento permitió que Isabel II heredara el trono?", options: ["Ley Sálica", "Pragmática Sanción", "Constitución de Cádiz", "Manifiesto Real"], answer: 1 },
+        { question: "¿Qué conflicto surgió tras la muerte de Fernando VII?", options: ["La guerra de Independencia", "La primera guerra carlista", "La guerra de Sucesión", "La revolución de 1820"], answer: 1 },
+        { question: "¿Qué porcentaje de los ingresos de la Real Hacienda provenía de las colonias americanas?", options: ["10%", "20%", "30%", "50%"], answer: 1 },
+        { question: "¿Qué evento permitió a los británicos atacar América directamente?", options: ["La batalla de Trafalgar", "La guerra de Independencia", "El Congreso de Viena", "El pronunciamiento de Riego"], answer: 0 },
+        { question: "¿Qué líder independentista proclamó la independencia de Chile?", options: ["Simón Bolívar", "José de San Martín", "Hidalgo", "Iturbide"], answer: 1 },
+        { question: "¿Qué batalla marcó la derrota definitiva de los españoles en América?", options: ["Batalla de Ayacucho", "Batalla de Carabobo", "Batalla de Boyacá", "Batalla de Chacabuco"], answer: 0 },
+        { question: "¿Qué país se independizó con Agustín de Iturbide como emperador?", options: ["Venezuela", "Chile", "México", "Colombia"], answer: 2 },
+        { question: "¿Qué lengua se convirtió en oficial en la mayoría de los países americanos tras la independencia?", options: ["Quechua", "Guaraní", "Español", "Portugués"], answer: 2 },
+        { question: "¿Qué estilo arquitectónico europeo influyó en las ciudades americanas?", options: ["Románico", "Barroco", "Gótico", "Renacentista"], answer: 1 }
+]
+
+
+        // Función para obtener 20 preguntas aleatorias
+        function getRandomQuestions() {
+            const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 20);
+        }
+
+        // Desordenar las opciones de respuesta
+        function shuffleOptions(options) {
+            return options.map(value => ({ value, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ value }) => value);
+        }
+
+        const questions = getRandomQuestions();
+        let currentQuestionIndex = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        const quizContainer = document.getElementById("quiz-container");
+        const feedbackContainer = document.getElementById("feedback");
+        const correctCountSpan = document.getElementById("correct-count");
+        const incorrectCountSpan = document.getElementById("incorrect-count");
+
+        function loadQuestion() {
+            const questionData = questions[currentQuestionIndex];
+            const shuffledOptions = shuffleOptions([...questionData.options]);
+            feedbackContainer.textContent = ""; // Limpiar feedback anterior
+            quizContainer.innerHTML = `
+                <p class="text-lg font-medium mb-4">${questionData.question}</p>
+                <div class="space-y-2">
+                    ${shuffledOptions.map((option, index) => `
+                        <button 
+                            class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none" 
+                            onclick="checkAnswer('${option}')">
+                            ${option}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function checkAnswer(selectedOption) {
+            const questionData = questions[currentQuestionIndex];
+            if (selectedOption === questionData.options[questionData.answer]) {
+                feedbackContainer.textContent = "¡Correcto!";
+                feedbackContainer.classList.add("text-green-500");
+                feedbackContainer.classList.remove("text-red-500");
+                correctCount++;
+            } else {
+                feedbackContainer.textContent = `Incorrecto. La respuesta correcta era: ${questionData.options[questionData.answer]}`;
+                feedbackContainer.classList.add("text-red-500");
+                feedbackContainer.classList.remove("text-green-500");
+                incorrectCount++;
+            }
+
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(loadQuestion, 1000); // Esperar un segundo antes de cargar la siguiente pregunta
+            } else {
+                quizContainer.innerHTML = `
+                    <p class="text-lg font-medium">Has completado el quiz.</p>
+                    <p class="mt-2">Aciertos: ${correctCount}</p>
+                    <p>Fallos: ${incorrectCount}</p>
+                    <button class="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none" onclick="restartQuiz()">Reiniciar</button>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            incorrectCount = 0;
+            correctCountSpan.textContent = correctCount;
+            incorrectCountSpan.textContent = incorrectCount;
+            feedbackContainer.textContent = "";
+            loadQuestion();
+        }
+
+        // Cargar las preguntas aleatorias
+        loadQuestion();
+    </script>
+</body>
+</html>
